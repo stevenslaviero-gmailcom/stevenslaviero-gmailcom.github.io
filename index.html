@@ -14,7 +14,9 @@
     el: '#widget-container'
   }, function success(res) {
     if (res.status === 'SUCCESS') {
-      console.log('Do something with this sessionToken', res.session.token);
+      res.session.setCookieAndRedirect('https://dev-938163.okta.com/app/UserHome');
+  }
+}
     } else {
     // The user can be in another authentication state that requires further action.
     // For more information about these states, see:
