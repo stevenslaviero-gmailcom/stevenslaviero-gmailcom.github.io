@@ -6,6 +6,17 @@
 
 <link href="https://global.oktacdn.com/okta-signin-widget/3.2.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
 
+<style>
+  .mobileConnect {
+    font-size: 0 !important;
+    background-color: #61507a !important;
+    background-image:url('https://mobileconnect.io/wp-content/themes/theme_mcio/images/mc-logo-footer.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: auto 80% !important;
+    background-position: center !important;
+  }
+</style>
+
 <div id="widget-container"></div>
 
 <script>
@@ -14,7 +25,7 @@
     el: '#widget-container'
   }, function success(res) {
   if (res.status === 'SUCCESS') {
-    res.session.setCookieAndRedirect('https://${yourOktaDomain}/app/UserHome');
+    res.session.setCookieAndRedirect('https://dev-938163.okta.com/app/UserHome');
   }
 }
     } else {
