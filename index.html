@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
+  <title>Steve SE Test</title>
 <body>
+  <style>
+    body {
+      background-image: url("sydney.jpg");
+            background-repeat:no-repeat;
+           background-size:cover;
+    } 
+    
+    </style>
 <!-- Latest CDN production Javascript and CSS -->
 <script src="https://global.oktacdn.com/okta-signin-widget/3.2.2/js/okta-sign-in.min.js" type="text/javascript"></script>
 
@@ -8,21 +17,92 @@
 
 <div id="widget-container"></div>
 
-<script >
-  var signIn = new OktaSignIn({baseUrl: 'https://dev-938163.okta.com'});
-  signIn.renderEl({
-    el: '#widget-container'
-  }, function success(res) {
-    if (res.status === 'SUCCESS') {
-      res.session.setCookieAndRedirect('https://dev-938163.okta.com/app/UserHome');
+<script>
+  signInWidgetConfig = {
+  // Enable or disable widget functionality with the following options. Some of these features require additional configuration in your Okta admin settings. Detailed information can be found here: https://github.com/okta/okta-signin-widget#okta-sign-in-widget
+  // Look and feel changes:
+  logo: 'https://static1.squarespace.com/static/58c5e4e159cc687d85326d4a/t/5a490e2e53450a63fe5e800a/1567802403445/?format=1500w', // Try changing "okta.com" to other domains, like: "workday.com", "splunk.com", or "delmonte.com"
+  brandName: 'Spaghetti Inc.',
+  language: 'en',                       // Try: [fr, de, es, ja, zh-CN] Full list: https://github.com/okta/okta-signin-widget#language-and-text
+  i18n: {
+    //Overrides default text when using English. Override other languages by adding additional sections.
+    'en': {
+      'primaryauth.title': 'Sign Into App',   // Changes the sign in text
+      'primaryauth.submit': 'Sign In',  // Changes the sign in button
+      'primaryauth.username.placeholder': 'Username - @steve.test',
+      'primaryauth.password.placeholder': 'Password - Network Password',
+      'primaryauth.submit': 'Click to Sign In',
+      'needhelp': 'Having problems signing in?',
+      'forgotpassword': 'Forgot password again?',
+      'unlockaccount': 'Unlock your account?',
+      // More e.g. [primaryauth.username.placeholder,  primaryauth.password.placeholder, needhelp, etc.].
+      // Full list here: https://github.com/okta/okta-signin-widget/blob/master/packages/@okta/i18n/dist/properties/login.properties
+    }
+  },
+  // Changes to widget functionality
+  colors: {
+  brand: '#004680'
+},
+  features: {
+    registration: false,                 // Enable self-service registration flow
+    rememberMe: true,                   // Setting to false will remove the checkbox to save username
+    //multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
+    selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
+    //smsRecovery: true,                // Enable SMS-based account recovery
+    //callRecovery: true,               // Enable voice call-based account recovery
+    router: true,                       // Leave this set to true for the API demo
+  },
+  baseUrl: 'https://dev-938163.okta.com',
+  clientId: '0oaz6lo930IDKMFKk4x5',
+  redirectUri: 'https://dev-938163.okta.com/app/UserHome',
+  authParams: {
+    pkce: true
+  },
+  customButtons: [
+    {
+      title: 'Check out our website!',
+      className: 'btn-customAuth',
+      click: function() {
+          // clicking on the button navigates to another page
+          window.location.href = 'https://www.sydney.com/';
+        }
+    },
+  ],
+  helpLinks: {
+    help: 'https://support.okta.com/help/s/',
+    forgotPassword: 'https://dev-938163.okta.com/signin/forgot-password',
+    unlock: 'https://dev-938163.okta.com/signin/unlock',
+    custom: [
+      {
+        text: 'What is Okta?',
+        href: 'https://okta.com/what-is-okta'
+      },
+    ]
+  },
+};
+
+signInWidget = new OktaSignIn(signInWidgetConfig);
+
+function widgetSuccessCallback(res) {
+  var key = '';
+  if (res[0]) {
+    key = Object.keys(res[0])[0];
+    signInWidget.tokenManager.add(key, res[0]);
+  }
+  if (res[1]) {
+    key = Object.keys(res[1])[0];
+    signInWidget.tokenManager.add(key, res[1]);
+  }
+  if (res.status === 'SUCCESS') {
+    res.session.setCookieAndRedirect('https://dev-938163.okta.com/app/UserHome');
   }
 }
-    } else {
-    // The user can be in another authentication state that requires further action.
-    // For more information about these states, see:
-    //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
-    }
-  });
+
+function widgetErrorCallback (err) {
+}
+
+signInWidget.renderEl({el: '#widget-container'}, widgetSuccessCallback, widgetErrorCallback);
+        
 </script>
 
 </body>
